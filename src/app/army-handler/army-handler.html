@@ -1,0 +1,34 @@
+<div class="map-container">
+  <google-map 
+    [height]="'600px'" 
+    [width]="'100%'" 
+    [zoom]="zoom" 
+    (mapClick)="getCoords($event)"
+    [center]="center">
+
+    <map-polygon [paths]="areaCoords" [options]="areaPolygon" (polygonClick)="getCoords($event)"></map-polygon>
+
+    <!-- need 2 polyline maps.
+    One for each device.
+    one for each device inside or outside the polygon -->
+    @if (devices)
+    {
+      @for (device of devices; track $index) {
+
+        <!-- is Inside -->
+        <map-polyline
+          [path]="device.paths[0].path"
+          [options]="{ strokeColor: 'green', strokeWeight: 3 }">
+        </map-polyline>
+
+        <!-- is Outside -->
+        <map-polyline
+          [path]="device.paths[1].path"
+          [options]="{ strokeColor: 'red', strokeWeight: 3 }">
+        </map-polyline>
+      }
+    }
+  </google-map>
+  <button (click)="clearPolygon()">Clear Polygon</button>
+</div>
+<router-outlet />

@@ -1,0 +1,27 @@
+<div class="map-container">
+  <google-map 
+    [height]="'600px'" 
+    [width]="'100%'" 
+    [zoom]="zoom" 
+    (mapClick)="getCoords($event)"
+    [options]="mapOptions"
+    [center]="center">
+
+    <map-polygon [paths]="areaCoords" [options]="areaPolygon" (polygonClick)="getCoords($event)"></map-polygon>
+    
+    @for (device of devices; track device)
+    {
+        @for (path of device.path; track path)
+        {
+            <map-advanced-marker
+                [position]="{ lat: path.lat, lng: path.lng }"
+                [title]="'Device: ' + device.id + ' Time: ' + path.timestamp + ' isIn: ' + path.isInside"
+            ></map-advanced-marker>
+        }
+    }
+
+  </google-map>
+  <button *ngIf="drawn" (click)="clearPolygon()">Clear Polygon</button>
+  <button *ngIf="!drawn" (click)="getPolygon()">Select points</button>
+</div>
+<router-outlet />
